@@ -40,16 +40,6 @@ If you want to compile the production release yourself, run:
 
 The compiled APK will be output to `app/build/outputs/apk/release/app-release.apk`.
 
-### Automated Screenshots
-
-To capture the README screenshots deterministically in dark mode at 1080x2400:
-
-```bash
-make screenshots
-```
-
-If no device or emulator is running, the script automatically boots a headless emulator, sets standard density and dimensions, captures each view, and restores device settings upon exit.
-
 ## License
 
 This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See the [LICENSE](LICENSE) file for details.
