@@ -1,0 +1,42 @@
+# Built application files
+build/
+**/build/
+*.apk
+*.aab
+
+# Gradle files
+.gradle/
+.kotlin/
+
+# Local configuration file (sdk.dir, etc.)
+local.properties
+
+# Log files
+*.log
+
+# Android Studio / IntelliJ / Eclipse / VSCode
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Keystores & Signing
+*.jks
+*.keystore
+signing.properties
+
+# AI / Agent configurations & assistant files
+AGENTS.md
+CLAUDE.md
+.gemini/
+.antigravity/
+.claude/
+.cursor/
+.cursorrules
+.windsurf/
+.codeium/
+.aide/
