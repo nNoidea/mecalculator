@@ -121,6 +121,8 @@ internal fun ExpressiveCalcButton(
                 text = label,
                 fontSize = fontSize,
                 fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                softWrap = false,
             )
         }
     }

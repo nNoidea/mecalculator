@@ -1,5 +1,7 @@
 package com.nnoidea.mecalculator.ui.main
 
+import com.nnoidea.mecalculator.domain.NumberFormatter
+
 data class HistoryEntry(
     val tokens: List<MathToken>,
     val result: String,
@@ -8,6 +10,19 @@ data class HistoryEntry(
 enum class HistorySide {
     FORMULA,
     RESULT,
+}
+
+internal fun isHistoryCopyActive(
+    inHistory: Boolean,
+    historySize: Int,
+): Boolean = inHistory && historySize > 0
+
+internal fun tokensForHistoryCopy(
+    entry: HistoryEntry,
+    side: HistorySide,
+): List<MathToken> = when (side) {
+    HistorySide.FORMULA -> entry.tokens
+    HistorySide.RESULT -> NumberFormatter.resultStringToTokens(entry.result)
 }
 
 internal sealed interface HistoryNavResult {

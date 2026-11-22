@@ -563,20 +563,15 @@ fun CalculatorScreen(
         return false
     }
 
-    fun handleEqualsOrOk() {
+    fun handleEqualsOrCopy() {
         val curInHistory = localEditorState.inHistory
         val curTokens = localEditorState.tokens
-        val curCursor = localEditorState.cursor
         val curHistoryIndex = localEditorState.historyIndex
         val curHistorySide = localEditorState.historySide
 
-        if (curInHistory && history.isNotEmpty() && curTokens.isEmpty()) {
+        if (isHistoryCopyActive(curInHistory, history.size)) {
             val item = history[curHistoryIndex.coerceIn(0, history.lastIndex)]
-            if (curHistorySide == HistorySide.FORMULA) {
-                insertTokensAtCursor(item.tokens)
-            } else {
-                insertTokensAtCursor(NumberFormatter.resultStringToTokens(item.result))
-            }
+            insertTokensAtCursor(tokensForHistoryCopy(item, curHistorySide))
         } else {
             val evaluated = ExactMathEngine.evaluateTokens(curTokens)
             if (curTokens.isNotEmpty() && evaluated != null) {
@@ -717,8 +712,7 @@ fun CalculatorScreen(
                             .fillMaxSize()
                             .padding(6.dp),
                         keypadSlots = keypadSlots,
-                        inHistory = inHistory,
-                        isEditorEmpty = tokens.isEmpty(),
+                        inHistory = isHistoryCopyActive(inHistory, history.size),
                         arrowHoldDelayMs = arrowHoldDelayMs,
                         arrowRepeatIntervalMs = arrowRepeatIntervalMs,
                         initialActiveFolderSlotIndex = initialActiveFolderSlotIndex,
@@ -728,7 +722,7 @@ fun CalculatorScreen(
                         onInsertFraction = { insertFraction() },
                         onInsertSqrt = { insertSqrt() },
                         onMoveCursor = { dir -> moveCursor(dir) },
-                        onEqualsOrOk = { handleEqualsOrOk() },
+                        onEqualsOrCopy = { handleEqualsOrCopy() },
                         onBackspace = { handleBackspace() },
                         onLongPressDelete = { handleLongPressDelete() },
                         onDeletePressDown = { handleDeletePressDown() },
@@ -824,8 +818,7 @@ fun CalculatorScreen(
                                     .fillMaxWidth()
                                     .height(keypadH),
                                 keypadSlots = keypadSlots,
-                                inHistory = inHistory,
-                                isEditorEmpty = tokens.isEmpty(),
+                                inHistory = isHistoryCopyActive(inHistory, history.size),
                                 arrowHoldDelayMs = arrowHoldDelayMs,
                                 arrowRepeatIntervalMs = arrowRepeatIntervalMs,
                                 initialActiveFolderSlotIndex = initialActiveFolderSlotIndex,
@@ -835,7 +828,7 @@ fun CalculatorScreen(
                                 onInsertFraction = { insertFraction() },
                                 onInsertSqrt = { insertSqrt() },
                                 onMoveCursor = { dir -> moveCursor(dir) },
-                                onEqualsOrOk = { handleEqualsOrOk() },
+                                onEqualsOrCopy = { handleEqualsOrCopy() },
                                 onBackspace = { handleBackspace() },
                                 onLongPressDelete = { handleLongPressDelete() },
                                 onDeletePressDown = { handleDeletePressDown() },

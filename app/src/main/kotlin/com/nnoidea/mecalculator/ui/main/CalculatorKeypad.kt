@@ -47,7 +47,6 @@ internal fun CalculatorKeypad(
     modifier: Modifier = Modifier,
     keypadSlots: List<KeypadSlot>,
     inHistory: Boolean,
-    isEditorEmpty: Boolean = true,
     arrowHoldDelayMs: Int,
     arrowRepeatIntervalMs: Int,
     initialActiveFolderSlotIndex: Int? = null,
@@ -57,7 +56,7 @@ internal fun CalculatorKeypad(
     onInsertFraction: () -> Unit,
     onInsertSqrt: () -> Unit,
     onMoveCursor: (String) -> Boolean,
-    onEqualsOrOk: () -> Unit,
+    onEqualsOrCopy: () -> Unit,
     onBackspace: () -> Unit,
     onLongPressDelete: () -> Unit,
     onDeletePressDown: (() -> Unit)? = null,
@@ -175,7 +174,6 @@ internal fun CalculatorKeypad(
                                         .weight(1f)
                                         .fillMaxHeight(),
                                     inHistory = inHistory,
-                                    isEditorEmpty = isEditorEmpty,
                                     arrowHoldDelayMs = arrowHoldDelayMs,
                                     arrowRepeatIntervalMs = arrowRepeatIntervalMs,
                                     onInsertChars = onInsertChars,
@@ -184,7 +182,7 @@ internal fun CalculatorKeypad(
                                     onInsertFraction = onInsertFraction,
                                     onInsertSqrt = onInsertSqrt,
                                     onMoveCursor = onMoveCursor,
-                                    onEqualsOrOk = onEqualsOrOk,
+                                    onEqualsOrCopy = onEqualsOrCopy,
                                     onBackspace = onBackspace,
                                     onLongPressDelete = onLongPressDelete,
                                     onDeletePressDown = onDeletePressDown,
@@ -321,7 +319,6 @@ internal fun CalculatorKeypad(
                                     keyId = keyId,
                                     modifier = itemMod,
                                     inHistory = inHistory,
-                                    isEditorEmpty = isEditorEmpty,
                                     arrowHoldDelayMs = arrowHoldDelayMs,
                                     arrowRepeatIntervalMs = arrowRepeatIntervalMs,
                                     onInsertChars = { text ->
@@ -345,8 +342,8 @@ internal fun CalculatorKeypad(
                                         activeFolderSlotIndex = null
                                     },
                                     onMoveCursor = onMoveCursor,
-                                    onEqualsOrOk = {
-                                        onEqualsOrOk()
+                                    onEqualsOrCopy = {
+                                        onEqualsOrCopy()
                                         activeFolderSlotIndex = null
                                     },
                                     onBackspace = onBackspace,
@@ -368,7 +365,6 @@ internal fun KeypadKeySlotButton(
     keyId: String,
     modifier: Modifier = Modifier,
     inHistory: Boolean,
-    isEditorEmpty: Boolean = true,
     arrowHoldDelayMs: Int,
     arrowRepeatIntervalMs: Int,
     onInsertChars: (String) -> Unit,
@@ -377,7 +373,7 @@ internal fun KeypadKeySlotButton(
     onInsertFraction: () -> Unit,
     onInsertSqrt: () -> Unit,
     onMoveCursor: (String) -> Boolean,
-    onEqualsOrOk: () -> Unit,
+    onEqualsOrCopy: () -> Unit,
     onBackspace: () -> Unit,
     onLongPressDelete: () -> Unit,
     onDeletePressDown: (() -> Unit)? = null,
@@ -443,14 +439,13 @@ internal fun KeypadKeySlotButton(
             )
         }
         "=" -> {
-            val isOk = inHistory && isEditorEmpty
             ExpressiveCalcButton(
-                label = if (isOk) "OK" else "=",
+                label = if (inHistory) "Copy" else "=",
                 modifier = modifier,
                 containerColor = colors.containerColor,
                 contentColor = colors.contentColor,
-                fontSize = if (isOk) 20.sp else 26.sp,
-                onClick = onEqualsOrOk,
+                fontSize = if (inHistory) 18.sp else 26.sp,
+                onClick = onEqualsOrCopy,
             )
         }
         "⌫" -> {

@@ -286,4 +286,48 @@ class MainScreenTest {
         composeTestRule.waitForIdle()
         assertEquals("11111", AppSettingsRepository.history.value.last().result)
     }
+
+    @Test
+    fun copyFromHistory_showsCopyButtonAndInsertsWhenInputIsEmptyOrNonEmpty() {
+        val context = composeTestRule.activity.applicationContext
+        AppSettingsRepository.setCopyOverMode(context, CopyOverMode.NOTHING)
+        composeTestRule.setContent {
+            MECalculatorTheme {
+                MainNavigation()
+            }
+        }
+
+        // Create a history entry: 5 + 3 = 8 (input field becomes empty with CopyOverMode.NOTHING)
+        tapKey("5")
+        tapKey("+")
+        tapKey("3")
+        tapKey("=")
+        composeTestRule.waitForIdle()
+        assertTrue(AppSettingsRepository.activeTokens.value.isEmpty())
+
+        // 1. With empty input field, navigate up into history -> "=" becomes "Copy"
+        tapKey("▲")
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Copy").assertIsDisplayed()
+
+        // Tap "Copy" -> inserts "8" and button returns to "="
+        tapKey("Copy")
+        composeTestRule.waitForIdle()
+        assertEquals("8".map { MathToken.CharToken(it) }, AppSettingsRepository.activeTokens.value)
+        composeTestRule.onAllNodesWithText("=").onLast().assertIsDisplayed()
+
+        // 2. With non-empty input field ("8+"), navigate up into history -> "=" still becomes "Copy"
+        tapKey("+")
+        tapKey("▲")
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Copy").assertIsDisplayed()
+
+        // Switch to formula side (◀) and tap "Copy" -> inserts "5+3" at cursor ("8+5+3")
+        tapKey("◀")
+        composeTestRule.waitForIdle()
+        tapKey("Copy")
+        composeTestRule.waitForIdle()
+        assertEquals("8+5+3".map { MathToken.CharToken(it) }, AppSettingsRepository.activeTokens.value)
+        composeTestRule.onAllNodesWithText("=").onLast().assertIsDisplayed()
+    }
 }

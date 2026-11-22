@@ -980,4 +980,41 @@ class TokenCursorOperationsTest {
         assertTrue(currentTokens.isEmpty())
         assertEquals(0, currentCursor.offset)
     }
+
+    @Test
+    fun `isHistoryCopyActive is true whenever inHistory with entries regardless of editor contents`() {
+        assertTrue(isHistoryCopyActive(inHistory = true, historySize = 1))
+        assertTrue(isHistoryCopyActive(inHistory = true, historySize = 5))
+        assertFalse(isHistoryCopyActive(inHistory = true, historySize = 0))
+        assertFalse(isHistoryCopyActive(inHistory = false, historySize = 5))
+    }
+
+    @Test
+    fun `tokensForHistoryCopy inserts formula or result into non-empty input at cursor`() {
+        val entry = HistoryEntry(
+            tokens = chars("5+3"),
+            result = "8",
+        )
+        // Non-empty input "10+" with cursor at end (offset 3)
+        val existingTokens = chars("10+")
+        val cursorAtEnd = CursorState(path = emptyList(), offset = 3)
+
+        // Copying result into non-empty input -> "10+8"
+        val (withResult, resultCursor) = insertTokensAt(
+            existingTokens,
+            cursorAtEnd,
+            tokensForHistoryCopy(entry, HistorySide.RESULT),
+        )
+        assertEquals(chars("10+8"), withResult)
+        assertEquals(CursorState(path = emptyList(), offset = 4), resultCursor)
+
+        // Copying formula into non-empty input -> "10+5+3"
+        val (withFormula, formulaCursor) = insertTokensAt(
+            existingTokens,
+            cursorAtEnd,
+            tokensForHistoryCopy(entry, HistorySide.FORMULA),
+        )
+        assertEquals(chars("10+5+3"), withFormula)
+        assertEquals(CursorState(path = emptyList(), offset = 6), formulaCursor)
+    }
 }

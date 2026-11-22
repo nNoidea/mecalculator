@@ -87,7 +87,7 @@ object KeypadCatalog {
 
     fun colorRoleFor(keyId: String, isFolder: Boolean = false): KeyColorRole = when {
         isFolder || keyId == FOLDER_KEY_ID || keyId == "⌫" || keyId == "✕" -> KeyColorRole.TERTIARY
-        keyId == "=" || keyId == "OK" -> KeyColorRole.ACTION
+        keyId == "=" || keyId == "Copy" -> KeyColorRole.ACTION
         keyId.isEmpty() -> KeyColorRole.EMPTY
         keyId.length == 1 && (keyId[0].isDigit() || keyId[0] == '.') -> KeyColorRole.NUMBER
         else -> KeyColorRole.OPERATOR

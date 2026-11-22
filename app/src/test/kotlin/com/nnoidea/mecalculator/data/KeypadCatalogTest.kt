@@ -35,7 +35,7 @@ class KeypadCatalogTest {
 
     @Test
     fun colorRoleFor_action_returnsActionRole() {
-        listOf("=", "OK").forEach { keyId ->
+        listOf("=", "Copy").forEach { keyId ->
             assertEquals("Key $keyId should be ACTION", KeyColorRole.ACTION, KeypadCatalog.colorRoleFor(keyId))
         }
     }
